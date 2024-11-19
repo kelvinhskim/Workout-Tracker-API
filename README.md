@@ -14,163 +14,152 @@ To interact with the microservice, use the following endpoints:
 
 **1. Record a workout**
 
-**Endpoint**
-```
-POST http://localhost:5000/record-workout
-```
-**2. View Workout History**
+ - **Method**
 
-**Endpoint**
+   POST
+
+- **Endpoint**
 ```
-GET http://localhost:5000/view-workouts
+http://localhost:5000/record-workout
 ```
 
-**3. Retrieve Workout Progress**
-
-**Endpoint**
-```
-GET http://localhost:5000/retrieve-progress
-```
-#
-## **Request Format**
-
-**1. Record a Workout**
-- The request payload must be in JSON format and include:
-  - exercise_name (string): Name of the exercise performed.
-  - sets (integer): Number of sets completed.
-  - reps (integer): Number of reps per set.
-
-**json Example Request Payload**
-```
-{
-    "exercise_name": "Push-up",
-    "sets": 3,
-    "reps": 10
-}
-```
-**Python Example for Sending Request**
+- **Request Format:**
+  -   JSON payload with the following fields:
+      -  exercise_name (string): Name of the exercise performed.
+      -  sets (integer): Number of sets completed.
+      -  reps (integer): Number of reps per set.
+ 
+**Example Request**
 ```
 import requests
 
-# Microservice endpoint
 url = "http://localhost:5000/record-workout"
-
-# Request payload
 data = {
     "exercise_name": "Push-up",
     "sets": 3,
     "reps": 10
 }
-
-# Send POST request
 response = requests.post(url, json=data)
-
-# Print the response
 print(response.json())
 ```
-#
+
 **2. View Workout History**
 
-No additional payload is required.
+ - **Method**
 
-**Python Example for Sending Request**
+   GET
+
+- **Endpoint**
+```
+http://localhost:5000/view-workouts
+```
+
+- **Request Format**: No additional payload is required.
+
+**Example Request**
 ```
 import requests
 
-# Microservice endpoint
 url = "http://localhost:5000/view-workouts"
-
-# Send GET request
 response = requests.get(url)
-
-# Print the response
 print(response.json())
 ```
-#
+
 **3. Retrieve Workout Progress**
-- Requires query parameters:
-  - start_date (string): Start date in YYYY-MM-DD format.
-  - end_date (string): End date in YYYY-MM-DD format.
 
-**Example Query Parameters:**
+ - **Method**
+
+   GET
+   
+- **Endpoint**
 ```
-?start_date=2024-01-01&end_date=2024-12-31
+http://localhost:5000/retrieve-progress
 ```
 
-**Python Example for Sending Request:**
+- **Query Parameters:**
+    - start_date (string): Start date in YYYY-MM-DD format.
+    - end_date (string): End date in YYYY-MM-DD format.
+ 
+**Example Request**
 ```
 import requests
 
-# Microservice endpoint
 url = "http://localhost:5000/retrieve-progress"
-
-# Query parameters
-params = {
-    "start_date": "2024-01-01",
-    "end_date": "2024-12-31"
-}
-
-# Send GET request
+params = {"start_date": "2024-01-01", "end_date": "2024-12-31"}
 response = requests.get(url, params=params)
-
-# Print the response
 print(response.json())
 ```
 #
 **How to Programmatically Receive Data**
 
-The microservice will respond with structured JSON data. Below are examples of success and error responses.
+The microservice will return structured JSON responses for all requests.
 
-**Successful Response**
-
-For a valid request, the microservice will return:
-
-- status: "success".
-- message: A descriptive success message.
-- Relevant data (e.g., recorded workout details, workout history, or progress statistics).
-
-**Example Success Response (Record Workout):**
+**1. Record Workout Response**
+  - **Successful Response**
 ```
 {
-    "status": "success",
-    "message": "Workout recorded successfully",
-    "workout_details": {
-        "exercise_name": "Push-up",
-        "sets": 3,
-        "reps": 10,
-        "date": "2024-12-01 10:00:00"
+  "status": "success",
+  "message": "Workout recorded successfully",
+  "workout_details": {
+    "exercise_name": "Push-up",
+    "sets": 3,
+    "reps": 10,
+    "date": "2024-12-01 10:00:00"
+  }
+}
+```
+ - **On Error**
+```
+{
+  "status": "error",
+  "message": "Invalid input data"
+}
+```
+**2. View Workout History Response**
+  - **Successful Response**
+```
+{
+  "status": "success",
+  "workout_history": [
+    {
+      "exercise_name": "Push-up",
+      "sets": 3,
+      "reps": 10,
+      "date": "2024-12-01 10:00:00"
     }
+  ]
 }
 ```
-**Error Response**
-
-For an invalid request, the microservice will return:
-
-- status: "error".
-- message: A description of the error.
-
-**Example Error Response:**
+**3. Retrieve Workout Progress Response**
+  - **Successful Response**
 ```
 {
-    "status": "error",
-    "message": "Invalid input data"
+  "status": "success",
+  "progress_stats": {
+    "total_sets": 3,
+    "total_reps": 10,
+    "average_reps_per_set": 3.33
+  }
 }
 ```
-#
-**Example Response Handling in Python**
+  - **On Error**
+```
+{
+  "status": "error",
+  "message": "Invalid date range"
+}
+```
 
-The following Python code demonstrates how to handle the response:
+**Example Response Handling:**
 ```
 response = requests.post(url, json=data)
 
-# Check response status
 if response.status_code == 200:
-    # Success
-    print("Success Response:", response.json())
+    print("Response:", response.json())
 else:
-    # Error
-    print("Error Response:", response.json())
+    print("Error:", response.json())
 ```
+
 #
 ## **UML Sequence Diagram**
 
