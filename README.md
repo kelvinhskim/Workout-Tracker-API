@@ -1,8 +1,8 @@
-# **Workout Progress Microservice**
+# **Workout Tracker API**
 
 ## **Overview**
 
-This microservice allows users to record workout progress, view workout history, and analyze workout statistics. It is designed to be accessed programmatically using HTTP POST and GET requests, providing structured JSON responses for all interactions.
+A production-ready REST API that records set/rep workouts, returns history, and computes date-ranged progress metrics with validation and JSON responses. (Python + Flask)
 
 
 #
